@@ -1,11 +1,15 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const morgan = require('morgan');
 const bodyParser = require('body-parser');
 
 mongoose.Promise = global.Promise;
 
-const {router = shoppingListRouter } = require('./router');
+const {router} = require('./shoppingList/router');
+const {DATABASE_URL, PORT} = require('./config');
 const app = express();
+
+app.use(morgan('common'));
 
 app.use(bodyParser.json());
 app.use(express.static('public'));
@@ -13,14 +17,14 @@ app.use(express.static('public'));
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
-  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT');
   if (req.method === 'OPTIONS') {
     return res.send(204);
   }
   next();
 });
 
-app.use('/groceries/', shoppingListRouter);
+app.use('/groceries', router);
 
 app.get('/', function (req, res) {
   res.status(200);
