@@ -1,0 +1,29 @@
+{
+  "name": "shoppinglistapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "models.js",
+  "scripts": {
+    "test": "mocha --exit",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AaronWFreeman/shoppingListAPI.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AaronWFreeman/shoppingListAPI/issues"
+  },
+  "homepage": "https://github.com/AaronWFreeman/shoppingListAPI#readme",
+  "dependencies": {
+    "chai": "^4.1.2",
+    "chai-http": "^4.0.0",
+    "express": "^4.16.3",
+    "faker": "^4.1.0",
+    "mocha": "^5.2.0",
+    "mongoose": "^5.1.4",
+    "nodemon": "^1.17.5"
+  }
+}
