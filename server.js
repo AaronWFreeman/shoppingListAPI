@@ -24,7 +24,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use('/groceries', router);
+app.use('/', router);
 
 app.get('/', function (req, res) {
   res.status(200);

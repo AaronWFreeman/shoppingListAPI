@@ -6,7 +6,7 @@ const jsonParser = bodyParser.json();
 const {shoppingList} = require('./models');
 const router = express.Router();
 
-router.get('/', (req, res) => {
+router.get('/groceries', (req, res) => {
   shoppingList
     .find({})
     .then(shoppinglist => {
@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
     .catch(err => res.status(500).json({ message: 'Internal server error'}));
 })
 
-router.post('/', (req, res) => {
+router.post('/groceries/', (req, res) => {
   const requiredFields = ['title', 'category', 'amount'];
   for (let i = 0; i < requiredFields.length; i++) {
     const field = requiredFields[i];
@@ -41,19 +41,26 @@ router.post('/', (req, res) => {
     });
 });
 
-router.put('/:id/', (req, res) => {
+router.put('/groceries/:id', (req, res) => {
   const fieldsToUpdate = ['title', 'category', 'amount'];
   let updatedDocument = {};
-  fieldsToUpdate.forEach(field => {
-  if (field in req.body) {
-    updatedDocument[field] = req.body[field];
+  // fieldsToUpdate.forEach(thing => {
+  //   if (thing in req.body) {
+  //     updatedDocument[thing] = req.body[thing];
+  //   }
+  // });
+  for (let i=0; i < fieldsToUpdate.length; i ++) {
+    const field = fieldsToUpdate[i];
+    if(field in req.body) {
+      updatedDocument[field] = req.body[field];
+    }
+    return updatedDocument;
   }
-});
   console.log(updatedDocument);
   shoppingList
     .findByIdAndUpdate(req.params.id, updatedDocument, {new: true})
     .then(updatedList => {
-      res.status(200).json(updatedList)
+      res.status(200).json(updatedList);
     })
     .catch(err => res.status(500).json({message: 'Internal server error'}));
 });
