@@ -10,7 +10,7 @@ router.get('/groceries', (req, res) => {
   shoppingList
     .find({})
     .then(shoppinglist => {
-      res.status(200).json(shoppinglist);
+      res.status(200).json({groceries: shoppinglist});
     })
     .catch(err => res.status(500).json({ message: 'Internal server error'}));
 })
@@ -28,11 +28,9 @@ router.post('/groceries/', (req, res) => {
   console.log(req.body);
   shoppingList
     .create({
-      groceries: [{
         title: req.body.title,
         category: req.body.category,
         amount: req.body.amount
-      }]
     })
     .then(shoppinglist => res.status(201).json(shoppinglist))
     .catch(err => {
@@ -41,29 +39,29 @@ router.post('/groceries/', (req, res) => {
     });
 });
 
-router.put('/groceries/:id', (req, res) => {
+router.patch('/groceries/:id', (req, res, next) => {
   const fieldsToUpdate = ['title', 'category', 'amount'];
+  let id = req.params.id;
   let updatedDocument = {};
-  // fieldsToUpdate.forEach(thing => {
-  //   if (thing in req.body) {
-  //     updatedDocument[thing] = req.body[thing];
-  //   }
-  // });
-  for (let i=0; i < fieldsToUpdate.length; i ++) {
-    const field = fieldsToUpdate[i];
-    if(field in req.body) {
-      updatedDocument[field] = req.body[field];
-    }
-    return updatedDocument;
-  }
-  console.log(updatedDocument);
+  fieldsToUpdate.forEach(thing => {
+    if (thing in req.body) {
+      updatedDocument[thing] = req.body[thing];
+    };
+  });
+  console.log(updatedDocument, id);
   shoppingList
-    .findByIdAndUpdate(req.params.id, updatedDocument, {new: true})
+    .findByIdAndUpdate(id, updatedDocument, {new: true})
     .then(updatedList => {
-      res.status(200).json(updatedList);
+      if(updatedList) {
+        res.status(200).json(updatedList);
+      }
+      else {
+        next();
+      }
     })
-    .catch(err => res.status(500).json({message: 'Internal server error'}));
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({message: 'Internal server error'})});
 });
-
 
 module.exports = {router};
